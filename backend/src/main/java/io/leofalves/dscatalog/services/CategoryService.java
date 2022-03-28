@@ -1,6 +1,7 @@
 package io.leofalves.dscatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.leofalves.dscatalog.dto.CategoryDto;
 import io.leofalves.dscatalog.entities.Category;
 import io.leofalves.dscatalog.repositories.CategoryRepository;
+import io.leofalves.dscatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -21,5 +23,12 @@ public class CategoryService {
 	public List<CategoryDto> findAll(){
 		List<Category> list = categoryRepository.findAll();
 		return list.stream().map(c -> new CategoryDto(c)).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public CategoryDto findById(Long id) {
+		Optional<Category> obj = categoryRepository.findById(id);
+		Category category = obj.orElseThrow(() -> new EntityNotFoundException("Entity Not Found"));
+		return new CategoryDto(category);
 	}
 }
