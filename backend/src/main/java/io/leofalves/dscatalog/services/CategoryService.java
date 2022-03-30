@@ -38,4 +38,16 @@ public class CategoryService {
 		category = categoryRepository.save(category);
 		return new CategoryDto(category);
 	}
+
+	@Transactional
+	public CategoryDto update(Long id, CategoryDto dto) {
+		try {
+			Category category = categoryRepository.getOne(id); // getOne => Não acessa o banco de dados para fazer o SELECT
+			category.setName(dto.getName());
+			category = categoryRepository.save(category);
+			return new CategoryDto(category);
+		} catch (javax.persistence.EntityNotFoundException e) {
+			throw new EntityNotFoundException("id not found " + id);
+		}
+	}
 }
