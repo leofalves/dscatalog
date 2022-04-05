@@ -12,8 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.leofalves.dscatalog.dto.CategoryDto;
 import io.leofalves.dscatalog.dto.ProductDto;
+import io.leofalves.dscatalog.entities.Category;
 import io.leofalves.dscatalog.entities.Product;
+import io.leofalves.dscatalog.repositories.CategoryRepository;
 import io.leofalves.dscatalog.repositories.ProductRepository;
 import io.leofalves.dscatalog.services.exceptions.DatabaseException;
 import io.leofalves.dscatalog.services.exceptions.EntityNotFoundException;
@@ -23,6 +26,9 @@ public class ProductService {
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Transactional(readOnly = true)
 	public List<ProductDto> findAll(){
@@ -37,9 +43,10 @@ public class ProductService {
 		return new ProductDto(product, product.getCategories());
 	}
 
+	@Transactional
 	public ProductDto insert(ProductDto dto) {
 		Product product = new Product();
-		product.setName(dto.getName());
+		copyDtoToEntity(dto, product);
 		product = productRepository.save(product);
 		return new ProductDto(product);
 	}
@@ -48,7 +55,7 @@ public class ProductService {
 	public ProductDto update(Long id, ProductDto dto) {
 		try {
 			Product product = productRepository.getOne(id); // getOne => Não acessa o banco de dados para fazer o SELECT
-			product.setName(dto.getName());
+			copyDtoToEntity(dto, product);
 			product = productRepository.save(product);
 			return new ProductDto(product);
 		} catch (javax.persistence.EntityNotFoundException e) {
@@ -73,4 +80,18 @@ public class ProductService {
 		Page<Product> page = productRepository.findAll(pageRequest);
 		return page.map(c -> new ProductDto(c));
 	}
+	
+	private void copyDtoToEntity(ProductDto dto, Product product) {
+		product.setName(dto.getName());
+		product.setDescription(dto.getDescription());
+		product.setDate(dto.getDate());
+		product.setImgUrl(dto.getImgUrl());
+		product.setPrice(dto.getPrice());
+		
+		product.getCategories().clear();
+		for (CategoryDto catDto : dto.getCategories()) {
+			Category category = categoryRepository.getOne(catDto.getId());
+			product.getCategories().add(category);
+		}
+	}	
 }
