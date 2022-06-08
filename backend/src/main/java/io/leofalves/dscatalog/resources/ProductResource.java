@@ -28,15 +28,13 @@ public class ProductResource {
 
 	@GetMapping
 	public ResponseEntity<Page<ProductDto>> findAll(Pageable pageable) {
-
-
 		Page<ProductDto> list = productService.findAllPaged(pageable);
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
-		return ResponseEntity.ok().body(productService.findById(id));
+		return ResponseEntity.ok().body(productService.findById(id)); 		
 	}
 
 	@PostMapping
