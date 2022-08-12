@@ -4,14 +4,21 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import io.leofalves.dscatalog.entities.User;
 
 public class UserDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	
+	@NotBlank(message = "Required field")
 	private String firstName;
 	private String lastName;
+	
+	@Email(message = "Insert a valid e-mail")
 	private String email;
 	
 	Set<RoleDto> roles = new HashSet<>();
