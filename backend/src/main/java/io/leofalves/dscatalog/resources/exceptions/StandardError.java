@@ -1,4 +1,4 @@
-package io.leofalves.dscatalog.repositories.exceptions;
+package io.leofalves.dscatalog.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
