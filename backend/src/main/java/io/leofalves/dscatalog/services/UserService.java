@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.leofalves.dscatalog.dto.RoleDto;
 import io.leofalves.dscatalog.dto.UserDto;
 import io.leofalves.dscatalog.dto.UserInsertDto;
+import io.leofalves.dscatalog.dto.UserUpdateDto;
 import io.leofalves.dscatalog.entities.Role;
 import io.leofalves.dscatalog.entities.User;
 import io.leofalves.dscatalog.repositories.RoleRepository;
@@ -58,7 +59,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDto update(Long id, UserDto dto) {
+	public UserDto update(Long id, UserUpdateDto dto) {
 		try {
 			User user = repository.getOne(id); // getOne => Não acessa o banco de dados para fazer o SELECT
 			copyDtoToEntity(dto, user);

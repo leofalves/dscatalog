@@ -4,7 +4,6 @@ import io.leofalves.dscatalog.services.validation.UserInsertValid;
 
 @UserInsertValid
 public class UserInsertDto extends UserDto{
-
 	private static final long serialVersionUID = 1L;
 	
 	private String password;
