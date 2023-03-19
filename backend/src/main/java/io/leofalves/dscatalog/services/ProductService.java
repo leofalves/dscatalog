@@ -1,5 +1,6 @@
 package io.leofalves.dscatalog.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,10 +77,13 @@ public class ProductService {
 		}
 	}
 
-	public Page<ProductDto> findAllPaged(Pageable pageable) {
-		Page<Product> page = productRepository.findAll(pageable);
+
+	public Page<ProductDto> findAllPaged(Long categoryId, String name, Pageable pageable) {
+		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getOne(categoryId));
+		Page<Product> page = productRepository.search(categories, name, pageable);
 		return page.map(c -> new ProductDto(c));
 	}
+
 	
 	private void copyDtoToEntity(ProductDto dto, Product product) {
 		product.setName(dto.getName());
